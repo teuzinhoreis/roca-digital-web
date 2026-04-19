@@ -1,6 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { logoutAction } from '@/app/actions';
 
 const links = [
   { href: '/dashboard', label: 'Visão Geral', icon: '👑' },
@@ -11,7 +12,7 @@ const links = [
   { href: '/acertos', label: 'Acertos', icon: '💵' },
 ];
 
-export function Sidebar() {
+export function Sidebar({ nome }: { nome: string }) {
   const path = usePathname();
   return (
     <aside style={{ background: 'rgba(15,12,8,0.98)', borderRight: '1px solid rgba(201,168,76,0.1)' }}
@@ -37,8 +38,19 @@ export function Sidebar() {
           );
         })}
       </nav>
-      <div className="px-5 py-4 border-t text-xs" style={{ borderColor: 'rgba(201,168,76,0.1)', color: '#5a5040' }}>
-        🌿 v1.0
+      <div className="px-5 py-4 border-t flex items-center justify-between"
+        style={{ borderColor: 'rgba(201,168,76,0.1)' }}>
+        <div>
+          <div className="text-xs font-semibold" style={{ color: '#d9c9a8' }}>{nome}</div>
+          <div className="text-[10px]" style={{ color: '#5a5040' }}>Proprietário</div>
+        </div>
+        <form action={logoutAction}>
+          <button type="submit" className="text-[11px] px-2 py-1 rounded"
+            style={{ color: '#7a6e5a', background: 'rgba(255,255,255,0.04)' }}
+            title="Sair">
+            Sair
+          </button>
+        </form>
       </div>
     </aside>
   );
