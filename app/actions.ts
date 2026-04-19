@@ -11,14 +11,14 @@ export async function loginAction(formData: FormData) {
     redirect('/login?erro=Preencha+todos+os+campos');
   }
 
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('users')
     .select('id, nome, role, senha')
     .eq('login', login.trim())
     .eq('ativo', true)
     .single();
 
-  if (!data) redirect('/login?erro=Usu%C3%A1rio+n%C3%A3o+encontrado');
+  if (!data) redirect(`/login?erro=${encodeURIComponent(error?.message ?? 'nao encontrado')}`);
   if (data.role !== 'dono') redirect('/login?erro=Acesso+restrito+ao+propriet%C3%A1rio');
   if (data.senha !== senha) redirect('/login?erro=Senha+incorreta');
 
