@@ -15,7 +15,7 @@ export async function loginAction(formData: FormData) {
     .from('users')
     .select('id, nome, role, senha')
     .eq('login', login.trim())
-    .eq('ativo', 1)
+    .eq('ativo', true)
     .single();
 
   if (!data) redirect('/login?erro=Usu%C3%A1rio+n%C3%A3o+encontrado');
