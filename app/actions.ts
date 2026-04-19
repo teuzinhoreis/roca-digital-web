@@ -11,16 +11,20 @@ export async function loginAction(formData: FormData) {
     redirect('/login?erro=Preencha+todos+os+campos');
   }
 
+  const senhaCorreta = process.env.DONO_PASSWORD;
+  if (!senhaCorreta) redirect('/login?erro=Servidor+mal+configurado');
+  if (senha !== senhaCorreta) redirect('/login?erro=Senha+incorreta');
+
   const { data, error } = await supabase
     .from('users')
-    .select('id, nome, role, senha')
+    .select('id, nome, role')
     .eq('login', login.trim())
     .eq('ativo', true)
+    .eq('role', 'dono')
     .single();
 
-  if (!data) redirect(`/login?erro=${encodeURIComponent(error?.message ?? 'nao encontrado')}`);
+  if (!data) redirect(`/login?erro=${encodeURIComponent(error?.message ?? 'Usuário não encontrado')}`);
   if (data.role !== 'dono') redirect('/login?erro=Acesso+restrito+ao+propriet%C3%A1rio');
-  if (data.senha !== senha) redirect('/login?erro=Senha+incorreta');
 
   await createSession(data.id, data.nome);
   redirect('/dashboard');
